@@ -16,6 +16,22 @@ open https://cloud.google.com/sdk/docs/install
 gcloud run deploy --image=gcr.io/knative-samples/helloworld-rust:v0.1.0 --platform=managed
 ```
 
+## Try online
+
+> replace with your own `YOUR_ID_BLA_BLA` from previous step
+
+```
+curl -w '\n' https://hello-rust-cloudrun-YOUR_ID_BLA_BLA-as.a.run.app/
+```
+
+> Expected output:
+
+```
+Hello World
+```
+
+---
+
 ## Setup
 
 > This will setup `homebrew`, `docker desktop` and `docker` for build image locally.
@@ -73,6 +89,8 @@ docker push $username/helloworld-rust
 
 ## Deploy
 
+> Deploy again, this time on our local.
+
 ```
 # Deploy the app into your cluster.
 kubectl apply --filename service.yaml
@@ -86,6 +104,18 @@ kubectl get ksvc helloworld-rust  --output=custom-columns=NAME:.metadata.name,UR
 ```
 NAME              URL
 helloworld-rust   http://helloworld-rust.default.127.0.0.1.sslip.io
+```
+
+## Try local
+
+```
+curl -w '\n' http://helloworld-rust.default.127.0.0.1.sslip.io
+```
+
+> Expected output:
+
+```
+Hello Rust Sample v1
 ```
 
 ## Cleanup
