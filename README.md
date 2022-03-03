@@ -6,13 +6,13 @@ Hello Rust on CloudRun
 
 ## Deploy
 
-> This will deploy built image to CloudRun to prove that it works.
+> This will deploy built image to `CloudRun` to prove that it works.
 
-```
+```shell
 # Install gcloud cli and login
 open https://cloud.google.com/sdk/docs/install
 
-# Deploy samples image to CloudRun
+# Deploy samples image to `CloudRun`
 gcloud run deploy --image=gcr.io/knative-samples/helloworld-rust:v0.1.0 --platform=managed
 ```
 
@@ -20,13 +20,13 @@ gcloud run deploy --image=gcr.io/knative-samples/helloworld-rust:v0.1.0 --platfo
 
 > replace with your own `YOUR_ID_BLA_BLA` from previous step
 
-```
+```shell
 curl -w '\n' https://hello-rust-cloudrun-YOUR_ID_BLA_BLA-as.a.run.app/
 ```
 
 > Expected output:
 
-```
+```shell
 Hello World
 ```
 
@@ -36,7 +36,7 @@ Hello World
 
 > This will setup `homebrew`, `docker desktop` and `docker` for build image locally.
 
-```
+```shell
 # Install Homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
@@ -49,7 +49,7 @@ brew install docker
 
 > This will setup `kubectl` to run the image locally.
 
-```
+```shell
 # Install the `Knative` CLI.
 brew install kn
 
@@ -71,7 +71,7 @@ kind get clusters
 
 ## Build image
 
-```
+```shell
 # Get `username` from Docker hub and sign-in via `Docker Desktop`.
 open https://hub.docker.com/
 
@@ -91,7 +91,7 @@ docker push $username/helloworld-rust
 
 > Deploy again, this time on our local.
 
-```
+```shell
 # Deploy the app into your cluster.
 kubectl apply --filename service.yaml
 
@@ -101,14 +101,14 @@ kubectl get ksvc helloworld-rust  --output=custom-columns=NAME:.metadata.name,UR
 
 > Expected output:
 
-```
+```shell
 NAME              URL
 helloworld-rust   http://helloworld-rust.default.127.0.0.1.sslip.io
 ```
 
 ## Try local
 
-```
+```shell
 curl -w '\n' http://helloworld-rust.default.127.0.0.1.sslip.io
 ```
 
@@ -120,7 +120,17 @@ Hello Rust Sample v1
 
 ## Cleanup
 
-```
+```shell
 # To remove the sample app from your cluster, delete the service record:
 kubectl delete --filename service.yaml
+```
+
+# Alpine
+
+> rust:latest = 1.68GB  
+> rust:alpine = 1.23GB // with fixed error: linking with `cc` failed
+
+```shell
+# Build alpine version
+docker build -t $username/helloworld-rust . -f alpine.Dockerfile
 ```
