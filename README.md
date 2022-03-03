@@ -125,12 +125,16 @@ Hello Rust Sample v1
 kubectl delete --filename service.yaml
 ```
 
-# Alpine
+## Other versions
 
 > rust:latest = 1.68GB  
-> rust:alpine = 1.23GB // with fixed error: linking with `cc` failed
+> rust:alpine = 1.23GB // with fixed error: linking with `cc` failed  
+> rust:slim-buster = 1.04GB // recommended
 
 ```shell
-# Build alpine version
+# To build `rust:alpine` image.
 docker build -t $username/helloworld-rust . -f alpine.Dockerfile
+
+# To build `rust:slim-buster` image.
+docker build -t $username/helloworld-rust . -f slim-buster.Dockerfile
 ```
