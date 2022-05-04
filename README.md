@@ -138,3 +138,7 @@ docker build -t $username/helloworld-rust . -f alpine.Dockerfile
 # To build `rust:slim-buster` image.
 docker build -t $username/helloworld-rust . -f slim-buster.Dockerfile
 ```
+
+## TODO
+- Multi stage build: https://dev.to/sergeyzenchenko/actix-web-in-docker-how-to-build-small-and-secure-images-2mjd
+- Reduce size to 6mb (no dev): https://github.com/kpcyrd/mini-docker-rust
