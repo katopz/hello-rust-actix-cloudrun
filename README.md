@@ -49,3 +49,4 @@ gcloud run services update $SERVICE_NAME --update-env-vars TARGET=bar
 
 - Connect to a GitHub repository with Cloud Build: https://cloud.google.com/build/docs/automating-builds/github/connect-repo-github
 - Creating a CI/CD environment for serverless containers on Cloud Run with GitHub Actions: https://github.com/GoogleCloudPlatform/community/blob/master/tutorials/cicd-cloud-run-github-actions/index.md
+- GitHub Actions best practices for Rust projects: https://www.infinyon.com/blog/2021/04/github-actions-best-practices/#optimizing-rusts-build-speed-with-sccache
