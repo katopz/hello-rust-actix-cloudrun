@@ -21,9 +21,8 @@ docker run --rm --name hello-actix -p 8080:8080 -e "TARGET=foo" hello-actix
 ## Deploy directly to CloudRun
 
 ```shell
-# config yours
-PROJECT_ID=YOUR_PROJECT_ID_GO_HERE_DO_NOT_JUST_COPY_AND_PASTE
-export PROJECT_ID=avareum-dev
+# Your config for CloudRun
+export PROJECT_ID=YOUR_PROJECT_ID_GO_HERE_DO_NOT_JUST_COPY_AND_PASTE
 export SERVICE_NAME=hello-actix
 
 # Ensure we are all set
@@ -35,13 +34,13 @@ gcloud config set run/platform managed
 gcloud config set builds/use_kaniko True
 gcloud config set builds/kaniko_cache_ttl 24
 
-# submit build
+# Submit build
 gcloud builds submit --tag gcr.io/$PROJECT_ID/$SERVICE_NAME --timeout=30m
 
-# deploy with environment variables
+# Deploy with environment variables
 gcloud run deploy --image gcr.io/$PROJECT_ID/$SERVICE_NAME --set-env-vars TARGET=foo
 
-# update environment variables (if need)
+# Update environment variables (if need)
 gcloud run services update $SERVICE_NAME --update-env-vars TARGET=bar
 ```
 

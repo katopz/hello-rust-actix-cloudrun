@@ -13,7 +13,8 @@ async fn echo(req_body: String) -> impl Responder {
 }
 
 async fn manual_hello() -> impl Responder {
-    // Test env "TARGET" which defined at service.yaml
+    // Test env "TARGET" which defined when `docker run`, or `gcloud run deploy --set-env-vars`
+    // Depend on your platform target. (See README.md)
     let test_target = match env::var("TARGET") {
         Ok(target) => format!("Hey {target}!"),
         Err(_e) => "No TARGET env defined!".to_owned(),
