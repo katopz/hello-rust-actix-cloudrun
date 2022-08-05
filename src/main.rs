@@ -33,6 +33,11 @@ async fn search(req: HttpRequest) -> impl Responder {
     }
 }
 
+#[get("/bar")]
+async fn bar() -> impl Responder {
+    HttpResponse::Ok().body("Hello bar!")
+}
+
 async fn manual_hello() -> impl Responder {
     // Test env "TARGET" which defined when `docker run`, or `gcloud run deploy --set-env-vars`
     // Depend on your platform target. (See README.md)
@@ -54,14 +59,15 @@ async fn get_server() -> std::io::Result<()> {
             .service(echo)
             // "/hey"
             .route("/hey", web::get().to(manual_hello))
-            // "/api/v1/search?id=bar"
             .service(
-                // /api
+                // "/api"
                 web::scope("/api").service(
-                    // /v1
+                    // "/v1"
                     web::scope("/v1")
-                        // "/search?id=bar"
-                        .service(search),
+                        // "/api/v1/search?id=bar"
+                        .service(search)
+                        // "/api/v1/bar"
+                        .service(bar),
                 ),
             )
     })
