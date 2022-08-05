@@ -5,7 +5,7 @@ use actix_web::{
     web::{self, Query},
     App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
-use const_format::formatcp;
+
 use serde::Deserialize;
 
 #[get("/")]

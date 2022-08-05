@@ -9,7 +9,6 @@ actix-rt = "2.7.0"
 actix-test = "0.1.0"
 actix-web = "4"
 awc = "3.0.0"
-const_format = "0.2.26"
 serde = "1.0.142"
 
 [profile.release]
