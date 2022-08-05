@@ -1,2 +1,5 @@
 build
 target
+**/*.rs.bk
+*.swp
+*.swo
