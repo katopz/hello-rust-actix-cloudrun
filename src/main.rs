@@ -1,6 +1,12 @@
 use std::env;
 
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{
+    get, post,
+    web::{self, Query},
+    App, HttpRequest, HttpResponse, HttpServer, Responder,
+};
+use const_format::formatcp;
+use serde::Deserialize;
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -10,6 +16,21 @@ async fn hello() -> impl Responder {
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
+}
+
+#[allow(dead_code)]
+#[derive(Deserialize, Debug)]
+struct Foo {
+    id: String,
+}
+
+#[get("/search")]
+async fn search(req: HttpRequest) -> impl Responder {
+    let query = req.query_string();
+    match Query::<Foo>::from_query(query) {
+        Ok(foo) => HttpResponse::Ok().body(format!("Hi! {foo:?}")),
+        Err(e) => HttpResponse::BadRequest().body(e.to_string()),
+    }
 }
 
 async fn manual_hello() -> impl Responder {
@@ -24,8 +45,7 @@ async fn manual_hello() -> impl Responder {
     HttpResponse::Ok().body(test_target)
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn get_server() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // "/"
@@ -34,8 +54,49 @@ async fn main() -> std::io::Result<()> {
             .service(echo)
             // "/hey"
             .route("/hey", web::get().to(manual_hello))
+            // "/api/v1/search?id=bar"
+            .service(
+                // /api
+                web::scope("/api").service(
+                    // /v1
+                    web::scope("/v1")
+                        // "/search?id=bar"
+                        .service(search),
+                ),
+            )
     })
     .bind("0.0.0.0:8080")?
     .run()
     .await
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    get_server().await
+}
+
+#[cfg(test)]
+mod tests {
+    use actix_web::{web, App, HttpRequest, HttpResponse};
+
+    #[actix_rt::test]
+    async fn test() {
+        let srv = actix_test::start(|| {
+            App::new().service(web::resource("/").to(|req: HttpRequest| {
+                if req.query_string().contains("id") {
+                    HttpResponse::Ok()
+                } else {
+                    HttpResponse::BadRequest()
+                }
+            }))
+        });
+
+        let res = awc::Client::new()
+            .get(srv.url("/?id=5"))
+            .send()
+            .await
+            .unwrap();
+
+        assert!(res.status().is_success());
+    }
 }
