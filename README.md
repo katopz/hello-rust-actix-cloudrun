@@ -2,9 +2,22 @@
 
 Hello Rust on CloudRun
 
-> ref: https://github.com/knative/docs/tree/main/code-samples/community/serving/helloworld-rust
+## 👍 Updated version w/ actix = 8.48MB (Recommended)
 
-## Deploy
+> https://github.com/katopz/hello-rust-cloudrun/tree/actix
+
+- Multi stage build: https://dev.to/sergeyzenchenko/actix-web-in-docker-how-to-build-small-and-secure-images-2mjd
+- Reduce size to 6mb (no dev): https://github.com/kpcyrd/mini-docker-rust
+
+---
+
+## 👇 Below this is original version with hyper = 649MB (Need optimize)
+
+### References:
+
+- https://github.com/knative/docs/tree/main/code-samples/community/serving/helloworld-rust
+
+### Deploy
 
 > This will deploy built image to `CloudRun` to prove that it works.
 
@@ -16,7 +29,7 @@ open https://cloud.google.com/sdk/docs/install
 gcloud run deploy --image=gcr.io/knative-samples/helloworld-rust:v0.1.0 --platform=managed
 ```
 
-## Try online
+### Try online
 
 > replace with your own `YOUR_ID_BLA_BLA` from previous step
 
@@ -32,7 +45,7 @@ Hello World
 
 ---
 
-## Setup
+### Setup
 
 > This will setup `homebrew`, `docker desktop` and `docker` for build image locally.
 
@@ -69,7 +82,7 @@ kn quickstart kind
 kind get clusters
 ```
 
-## Build image
+### Build image
 
 ```shell
 # Get `username` from Docker hub and sign-in via `Docker Desktop`.
@@ -87,7 +100,7 @@ docker build -t $username/helloworld-rust .
 docker push $username/helloworld-rust
 ```
 
-## Deploy
+### Deploy
 
 > Deploy again, this time on our local.
 
@@ -106,7 +119,7 @@ NAME              URL
 helloworld-rust   http://helloworld-rust.default.127.0.0.1.sslip.io
 ```
 
-## Try local
+### Try local
 
 ```shell
 curl -w '\n' http://helloworld-rust.default.127.0.0.1.sslip.io
@@ -118,14 +131,14 @@ curl -w '\n' http://helloworld-rust.default.127.0.0.1.sslip.io
 Hello Rust Sample v1
 ```
 
-## Cleanup
+### Cleanup
 
 ```shell
 # To remove the sample app from your cluster, delete the service record:
 kubectl delete --filename service.yaml
 ```
 
-## Other versions
+### Other versions
 
 > rust:latest = 1.68GB  
 > rust:alpine = 1.23GB // with fixed error: linking with `cc` failed  
@@ -138,7 +151,3 @@ docker build -t $username/helloworld-rust . -f alpine.Dockerfile
 # To build `rust:slim-buster` image.
 docker build -t $username/helloworld-rust . -f slim-buster.Dockerfile
 ```
-
-## TODO
-- Multi stage build: https://dev.to/sergeyzenchenko/actix-web-in-docker-how-to-build-small-and-secure-images-2mjd
-- Reduce size to 6mb (no dev): https://github.com/kpcyrd/mini-docker-rust
