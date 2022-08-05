@@ -77,26 +77,15 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use actix_web::{web, App, HttpRequest, HttpResponse};
+    use crate::hello;
+    use actix_web::App;
 
     #[actix_rt::test]
     async fn test() {
-        let srv = actix_test::start(|| {
-            App::new().service(web::resource("/").to(|req: HttpRequest| {
-                if req.query_string().contains("id") {
-                    HttpResponse::Ok()
-                } else {
-                    HttpResponse::BadRequest()
-                }
-            }))
-        });
+        let srv = actix_test::start(|| App::new().service(hello));
 
-        let res = awc::Client::new()
-            .get(srv.url("/?id=5"))
-            .send()
-            .await
-            .unwrap();
-
-        assert!(res.status().is_success());
+        let req = srv.get("/");
+        let response = req.send().await.unwrap();
+        assert!(response.status().is_success());
     }
 }
