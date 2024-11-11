@@ -1,6 +1,6 @@
 # hello-rust-actix-cloudrun
 
-Hello Rust (Actix) on CloudRun revisit 2022
+Hello Rust (Actix) on CloudRun revisit 2024/11/11
 
 ## References
 
@@ -16,13 +16,16 @@ docker build -t hello-actix -f ./Dockerfile .
 
 # run
 docker run --rm --name hello-actix -p 8080:8080 -e "TARGET=foo" hello-actix
+
+# view
+open http://localhost:8080
 ```
 
 ## Deploy directly to CloudRun
 
 ```shell
 # Your config for CloudRun
-export PROJECT_ID=YOUR_PROJECT_ID_GO_HERE_DO_NOT_JUST_COPY_AND_PASTE
+export PROJECT_ID=hello-dify
 export SERVICE_NAME=hello-actix
 
 # Ensure we are all set
@@ -34,14 +37,35 @@ gcloud config set run/platform managed
 gcloud config set builds/use_kaniko True
 gcloud config set builds/kaniko_cache_ttl 24
 
+# Give serviceAccount permissions
+gcloud projects add-iam-policy-binding hello-dify \
+    --member="serviceAccount:service-526806448952@gcp-sa-cloudbuild.iam.gserviceaccount.com" \
+    --role="roles/cloudbuild.serviceAgent"
+
 # Submit build
 gcloud builds submit --tag gcr.io/$PROJECT_ID/$SERVICE_NAME --timeout=30m
 
 # Deploy with environment variables
 gcloud run deploy --image gcr.io/$PROJECT_ID/$SERVICE_NAME --set-env-vars TARGET=foo
 
-# Update environment variables (if need)
+# Update environment variables (optional for testing)
 gcloud run services update $SERVICE_NAME --update-env-vars TARGET=bar
+```
+
+## A trap (2024)
+
+> see [Granting a role to the Cloud Build service agent](https://cloud.google.com/build/docs/securing-builds/configure-access-for-cloud-build-service-account#gcloud)
+
+```
+ERROR: (gcloud.builds.submit) FAILED_PRECONDITION: invalid bucket "123.cloudbuild-logs.googleusercontent.com"; service account 123-compute@developer.gserviceaccount.com does not have access to the bucket
+```
+
+### Solution
+
+```bash
+gcloud projects add-iam-policy-binding hello-dify \
+    --member="serviceAccount:service-526806448952@gcp-sa-cloudbuild.iam.gserviceaccount.com" \
+    --role="roles/cloudbuild.serviceAgent"
 ```
 
 ## CI/CD Options

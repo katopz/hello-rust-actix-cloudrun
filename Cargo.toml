@@ -2,14 +2,14 @@
 name = "hello-actix"
 version = "0.1.0"
 authors = ["katopz"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-actix-rt = "2.7.0"
-actix-test = "0.1.0"
-actix-web = "4"
-awc = "3.0.0"
-serde = "1.0.142"
+actix-rt = "2.10.0"
+actix-test = "0.1.5"
+actix-web = "4.9.0"
+awc = "3.5.1"
+serde = "1.0.214"
 
 [profile.release]
 opt-level = "z"  # Optimize for size.
