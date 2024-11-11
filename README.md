@@ -21,15 +21,20 @@ docker run --rm --name hello-actix -p 8080:8080 -e "TARGET=foo" hello-actix
 open http://localhost:8080
 ```
 
-## Deploy directly to CloudRun
+## Deploy directly to CloudRun via macOS
 
 ```shell
-# Your config for CloudRun
-export PROJECT_ID=YOUR_PROJECT_ID_GO_HERE_DO_NOT_JUST_COPY_AND_PASTE
-export SERVICE_NAME=hello-actix
-
 # Ensure we are all set
 gcloud auth login
+
+# See the projects list
+gcloud projects list
+
+# Your config for CloudRun
+export PROJECT_ID=YOUR_PROJECT_ID_SEE_ABOVE
+export PROJECT_NUMBER=YOUR_PROJECT_NUMBER_SEE_ABOVE
+export SERVICE_NAME=hello-actix
+
 gcloud config set project $PROJECT_ID
 
 # Enable cache https://github.com/GoogleContainerTools/kaniko
@@ -39,7 +44,7 @@ gcloud config set builds/kaniko_cache_ttl 24
 
 # Give serviceAccount build permissions
 gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:service-526806448952@gcp-sa-cloudbuild.iam.gserviceaccount.com" \
+    --member="serviceAccount:service-$PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com" \
     --role="roles/cloudbuild.serviceAgent"
 
 # Submit build
@@ -64,7 +69,7 @@ ERROR: (gcloud.builds.submit) FAILED_PRECONDITION: invalid bucket "123.cloudbuil
 
 ```bash
 gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:service-526806448952@gcp-sa-cloudbuild.iam.gserviceaccount.com" \
+    --member="serviceAccount:service-$PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com" \
     --role="roles/cloudbuild.serviceAgent"
 ```
 
